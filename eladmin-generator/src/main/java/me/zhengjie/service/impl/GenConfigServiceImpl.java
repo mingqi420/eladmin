@@ -21,6 +21,7 @@ import me.zhengjie.repository.GenConfigRepository;
 import me.zhengjie.service.GenConfigService;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.stereotype.Service;
+
 import java.io.File;
 
 /**
@@ -36,7 +37,7 @@ public class GenConfigServiceImpl implements GenConfigService {
     @Override
     public GenConfig find(String tableName) {
         GenConfig genConfig = genConfigRepository.findByTableName(tableName);
-        if(genConfig == null){
+        if (genConfig == null) {
             return new GenConfig(tableName);
         }
         return genConfig;
@@ -45,7 +46,7 @@ public class GenConfigServiceImpl implements GenConfigService {
     @Override
     public GenConfig update(String tableName, GenConfig genConfig) {
         // 如果 api 路径为空，则自动生成路径
-        if(StringUtils.isBlank(genConfig.getApiPath())){
+        if (StringUtils.isBlank(genConfig.getApiPath())) {
             String separator = File.separator;
             String[] paths;
             String symbol = "\\";

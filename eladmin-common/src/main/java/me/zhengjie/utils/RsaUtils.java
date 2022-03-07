@@ -1,6 +1,7 @@
 package me.zhengjie.utils;
 
 import org.apache.commons.codec.binary.Base64;
+
 import javax.crypto.Cipher;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -49,6 +50,7 @@ public class RsaUtils {
 
     /**
      * 私钥加密公钥解密
+     *
      * @throws Exception /
      */
     private static void test2(RsaKeyPair keyPair) throws Exception {
@@ -70,7 +72,7 @@ public class RsaUtils {
      * 公钥解密
      *
      * @param publicKeyText 公钥
-     * @param text 待解密的信息
+     * @param text          待解密的信息
      * @return /
      * @throws Exception /
      */
@@ -88,7 +90,7 @@ public class RsaUtils {
      * 私钥加密
      *
      * @param privateKeyText 私钥
-     * @param text 待加密的信息
+     * @param text           待加密的信息
      * @return /
      * @throws Exception /
      */
@@ -106,7 +108,7 @@ public class RsaUtils {
      * 私钥解密
      *
      * @param privateKeyText 私钥
-     * @param text 待解密的文本
+     * @param text           待解密的文本
      * @return /
      * @throws Exception /
      */
@@ -124,7 +126,7 @@ public class RsaUtils {
      * 公钥加密
      *
      * @param publicKeyText 公钥
-     * @param text 待加密的文本
+     * @param text          待加密的文本
      * @return /
      */
     public static String encryptByPublicKey(String publicKeyText, String text) throws Exception {

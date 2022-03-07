@@ -30,14 +30,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
+ * @author Zheng Jie
+ * @date 2019-04-10
+ */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "dict")
@@ -48,7 +49,7 @@ public class DictServiceImpl implements DictService {
     private final RedisUtils redisUtils;
 
     @Override
-    public Map<String, Object> queryAll(DictQueryCriteria dict, Pageable pageable){
+    public Map<String, Object> queryAll(DictQueryCriteria dict, Pageable pageable) {
         Page<Dict> page = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable);
         return PageUtil.toPage(page.map(dictMapper::toDto));
     }
@@ -71,7 +72,7 @@ public class DictServiceImpl implements DictService {
         // 清理缓存
         delCaches(resources);
         Dict dict = dictRepository.findById(resources.getId()).orElseGet(Dict::new);
-        ValidationUtil.isNull( dict.getId(),"Dict","id",resources.getId());
+        ValidationUtil.isNull(dict.getId(), "Dict", "id", resources.getId());
         resources.setId(dict.getId());
         dictRepository.save(resources);
     }
@@ -91,9 +92,9 @@ public class DictServiceImpl implements DictService {
     public void download(List<DictDto> dictDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (DictDto dictDTO : dictDtos) {
-            if(CollectionUtil.isNotEmpty(dictDTO.getDictDetails())){
+            if (CollectionUtil.isNotEmpty(dictDTO.getDictDetails())) {
                 for (DictDetailDto dictDetail : dictDTO.getDictDetails()) {
-                    Map<String,Object> map = new LinkedHashMap<>();
+                    Map<String, Object> map = new LinkedHashMap<>();
                     map.put("字典名称", dictDTO.getName());
                     map.put("字典描述", dictDTO.getDescription());
                     map.put("字典标签", dictDetail.getLabel());
@@ -102,7 +103,7 @@ public class DictServiceImpl implements DictService {
                     list.add(map);
                 }
             } else {
-                Map<String,Object> map = new LinkedHashMap<>();
+                Map<String, Object> map = new LinkedHashMap<>();
                 map.put("字典名称", dictDTO.getName());
                 map.put("字典描述", dictDTO.getDescription());
                 map.put("字典标签", null);
@@ -114,7 +115,7 @@ public class DictServiceImpl implements DictService {
         FileUtil.downloadExcel(list, response);
     }
 
-    public void delCaches(Dict dict){
+    public void delCaches(Dict dict) {
         redisUtils.del("dict::name:" + dict.getName());
     }
 }

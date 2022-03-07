@@ -18,11 +18,16 @@ package me.zhengjie;
 import io.swagger.annotations.Api;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.utils.SpringContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -41,9 +46,12 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AppRun {
-
+    private static Logger logger = LoggerFactory.getLogger(AppRun.class);
+    private static ApplicationContext applicationContext;
     public static void main(String[] args) {
         SpringApplication.run(AppRun.class, args);
+       // ConfigurableApplicationContext applicationContext = SpringApplication.run(AppRun.class, args);
+       // printSystemInfo(applicationContext);
     }
 
     @Bean
@@ -57,7 +65,25 @@ public class AppRun {
         fa.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
         return fa;
     }
-
+    private static void printSystemInfo(ApplicationContext applicationContext) {
+        AppRun.applicationContext = applicationContext;
+        Environment environment = applicationContext.getEnvironment();
+        String port = environment.getProperty("server.port");
+        String context = environment.getProperty("server.servlet.context-path");
+        String ip = "localhost";
+        String systemIndexUrl = "http://" + ip + ":" + port + context;
+////        System.out.printf("\n>>>>>>>>>>>>>>>>>>系统首页：%s >>>>>>>>\n", systemIndexUrl);
+////        String swaggerApiUrl = systemIndexUrl + "swagger-ui.html";
+        String swaggerBootStrapApiUrl = systemIndexUrl + "doc.html";
+////        System.out.printf(">>>>>>>>>>>>>>>>>>>>接口文档地址（原生swaggerUI）：%s >>>>>>>>>\n", swaggerApiUrl);
+////        System.out.printf(">>>>>>>>>>>>>>>>>>>>接口文档地址2(bootstrap美化过，推荐使用)：%s >>>>>>>>>\n", swaggerBootStrapApiUrl);
+        String druidAccessUrl = systemIndexUrl + "druid";
+////        System.out.printf(">>>>>>>>>>>>>>>>>>>>druid数据监控中心访问url：%s >>>>>>>>>\n", druidAccessUrl);
+        logger.info(">>>>>>>>>>>>>>>>>>>>接口文档地址2(bootstrap美化过，推荐使用)：%s >>>>>>>>>\n");
+        logger.info(swaggerBootStrapApiUrl);
+        logger.info(">>>>>>>>>>>>>>>>>>>>druid数据监控中心访问url：%s >>>>>>>>>\n");
+        logger.info(druidAccessUrl);
+    }
     /**
      * 访问首页提示
      *
