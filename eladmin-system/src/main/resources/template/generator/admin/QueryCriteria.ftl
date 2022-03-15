@@ -26,7 +26,7 @@ import lombok.Data;
     import java.util.List;
 </#if>
 <#if queryColumns??>
-    import me.zhengjie.annotation.Query;
+    import Query;
 </#if>
 
 /**
